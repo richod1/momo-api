@@ -45,6 +45,50 @@ app.post('/get-momo-token',async(req,res)=>{
     }
 })
 
+app.post("/request-to-pay",async(req,res)=>{
+    try{
+        if(!momoToken){
+            return res.status(400).json({error:"Momo token is not available"});
+        }
+        const {total,phone,currency}=req.body;
+
+        const body={
+            amount:total,
+            currency:currency,
+            externalId:'',
+            payer:{
+                partyIdType:'MSISDN',
+                partyId:'46733123454',
+            },
+            payerMessage:'Payment for order',
+            payeeNote:'Payment for order',
+
+        };
+
+
+        const momoResponse=await axios.post(
+            momoRequestToPayUrl,
+            body,
+            {
+                headers:{
+                    'X-Reference-Id': 'c8f060db-5126-47a7-a67b-2fee08c0f30c',
+										'X-Target-Environment': 'sandbox',
+										'Ocp-Apim-Subscription-Key':'5b158c87ce9b495fb64dcac1852d745b',
+										Authorization: `Bearer ${momoToken}`,
+										'Content-Type': 'application/json',
+                }
+            }
+        );
+
+        res.status(201).json({momoResponse:momoResponse.data});
+
+    }catch(err){
+        console.error(err)
+        res.status(500).json({err:"An error occured at payment request route"});
+
+    }
+})
+
 app.listen(port,(err)=>{
     if(err) throw new Error("Server is aspleep");
     console.log(`Server is up on port :${port}`)
