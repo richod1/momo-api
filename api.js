@@ -14,10 +14,14 @@ app.get("/api",(req,res)=>{
 
 const momoHost='sandbox.momodeveloper.mtn.com';
 const momoTokenUrl=`https://${momoHost}/collections/token`;
-const momoRequestToPayUrl=`hrrps://${momoHost}.collections/v1_0/requesttopay`;
+const momoRequestToPayUrl=`https://${momoHost}.collections/v1_0/requesttopay`;
 
 let momoToken=null;
 
+
+/**
+ * MTN momo api wrapper
+ */
 // function to generate token
 app.post('/get-momo-token',async(req,res)=>{
     try{
@@ -55,7 +59,7 @@ app.post("/request-to-pay",async(req,res)=>{
         const body={
             amount:total,
             currency:currency,
-            externalId:'',
+            externalId:'c8f060db-5126-47a7-a67b-2fee08c0f30d',
             payer:{
                 partyIdType:'MSISDN',
                 partyId:'46733123454',
@@ -88,6 +92,10 @@ app.post("/request-to-pay",async(req,res)=>{
 
     }
 })
+
+// Vodafone mobile payments
+
+
 
 app.listen(port,(err)=>{
     if(err) throw new Error("Server is aspleep");
